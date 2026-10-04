@@ -593,7 +593,7 @@ function ProductCard({ product }: { product: StorefrontData["products"][number] 
                   </div>
                 )}
               </div>
-              {product.description && <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">{product.description}</p>}
+              {product.description && <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground"><LinkifyText text={product.description} /></p>}
               {availableColors.length > 0 && (
                 <div>
                   <p className="store-label mb-2">اللون: <span className="text-muted-foreground">{color}</span></p>
@@ -694,11 +694,21 @@ function DetailModal({
           <button onClick={onClose} className="rounded p-1 hover:bg-muted"><X className="h-4 w-4" /></button>
         </div>
         {selection.kind === "policy" && (
-          <p className="whitespace-pre-wrap text-sm">{(item as any).content}</p>
+          <p className="whitespace-pre-wrap text-sm"><LinkifyText text={(item as any).content} /></p>
         )}
-        {selection.kind === "contact" && (
-          <p className="text-sm"><span className="text-muted-foreground">{(item as any).kind}:</span> <span className="font-medium">{(item as any).value}</span></p>
-        )}
+        {selection.kind === "contact" && (() => {
+          const href = contactHref((item as any).kind, (item as any).value);
+          return (
+            <p className="text-sm">
+              <span className="text-muted-foreground">{(item as any).kind}:</span>{" "}
+              {href ? (
+                <a href={href} target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all font-medium text-primary underline underline-offset-2">{(item as any).value}</a>
+              ) : (
+                <span className="font-medium">{(item as any).value}</span>
+              )}
+            </p>
+          );
+        })()}
         {selection.kind === "shipping" && (
           <div className="space-y-1 text-sm">
             <div><span className="text-muted-foreground">Price: </span>{(item as any).price ?? "—"} {(item as any).currency ?? ""}</div>
@@ -1046,13 +1056,7 @@ function CartDrawer({
                         <div>
                           <div className="text-xs text-muted-foreground">بيانات الدفع</div>
                           <p className="mt-1 whitespace-pre-wrap break-words font-medium" dir="auto">
-                            {receipt.paymentDetails.split(/((?:https?:\/\/|www\.)[^\s]+|(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/\S*)?)/gi).map((part, i) =>
-                              /^(?:https?:\/\/|www\.)|^(?:[a-z0-9-]+\.)+[a-z]{2,}/i.test(part) && /\./.test(part) ? (
-                                <a key={i} href={/^https?:\/\//i.test(part) ? part : `https://${part}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">{part}</a>
-                              ) : (
-                                <span key={i}>{part}</span>
-                              ),
-                            )}
+                            <LinkifyText text={receipt.paymentDetails} />
                           </p>
                         </div>
                       )}
@@ -1070,7 +1074,7 @@ function CartDrawer({
                 </>
               ) : (
                 receipt.message && (
-                  <p className="whitespace-pre-wrap rounded-lg border p-3 text-muted-foreground">{receipt.message}</p>
+                  <p className="whitespace-pre-wrap rounded-lg border p-3 text-muted-foreground"><LinkifyText text={receipt.message} /></p>
                 )
               )}
 
