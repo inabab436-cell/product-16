@@ -1046,9 +1046,9 @@ function CartDrawer({
                         <div>
                           <div className="text-xs text-muted-foreground">بيانات الدفع</div>
                           <p className="mt-1 whitespace-pre-wrap break-words font-medium" dir="auto">
-                            {receipt.paymentDetails.split(/(https?:\/\/\S+)/g).map((part, i) =>
-                              /^https?:\/\//.test(part) ? (
-                                <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-primary underline">{part}</a>
+                            {receipt.paymentDetails.split(/((?:https?:\/\/|www\.)[^\s]+|(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/\S*)?)/gi).map((part, i) =>
+                              /^(?:https?:\/\/|www\.)|^(?:[a-z0-9-]+\.)+[a-z]{2,}/i.test(part) && /\./.test(part) ? (
+                                <a key={i} href={/^https?:\/\//i.test(part) ? part : `https://${part}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">{part}</a>
                               ) : (
                                 <span key={i}>{part}</span>
                               ),
