@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { LinkifyText } from "@/components/linkify-text";
 import { useQuery } from "@tanstack/react-query";
 import {
   Send, ArrowRight, UserCircle2, Paperclip, X, Loader2,
@@ -758,7 +759,7 @@ function MessageBubble({
               </a>
             );
           })}
-          {content && <div>{content}</div>}
+          {content && <div className="break-words"><LinkifyText text={content} className="break-all underline underline-offset-2" /></div>}
         </div>
       </div>
     </div>
