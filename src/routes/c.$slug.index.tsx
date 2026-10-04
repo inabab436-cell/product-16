@@ -1,3 +1,4 @@
+import { LinkifyText, contactHref } from "@/components/linkify-text";
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
